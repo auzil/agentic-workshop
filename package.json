@@ -1,0 +1,23 @@
+{
+  "name": "ai-agentic-workshop1",
+  "version": "0.1.0",
+  "description": "Hands-on workshop series: building agentic AI systems with TypeScript and Gemini.",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "ws:01": "node --env-file=.env --import tsx workshops/01-agent-loop/starter.ts",
+    "ws:01:solution": "node --env-file=.env --import tsx workshops/01-agent-loop/solution.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google/genai": "^1.50.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}
