@@ -10,6 +10,8 @@
   "scripts": {
     "ws:01": "node --env-file=.env --import tsx workshops/01-agent-loop/starter.ts",
     "ws:01:solution": "node --env-file=.env --import tsx workshops/01-agent-loop/solution.ts",
+    "ws:02": "node --env-file=.env --import tsx workshops/02-pipeline/starter.ts",
+    "ws:02:solution": "node --env-file=.env --import tsx workshops/02-pipeline/solution.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

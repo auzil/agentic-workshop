@@ -6,6 +6,7 @@
  */
 
 export { Agent, type AgentConfig } from './agent.js';
+export { pipeline, type PipelineStep } from './pipeline.js';
 export { Type, toGeminiTools, type Tool } from './tool.js';
 export { DEFAULT_MODEL, getLlm } from './llm.js';
 export { Logger } from './logger.js';

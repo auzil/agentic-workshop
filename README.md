@@ -33,6 +33,7 @@ npm run ws:01:solution        # runs the reference solution for W1
 Each workshop has its own README with the exercise brief — start there:
 
 - [Workshop 01 — The Agent Loop](./workshops/01-agent-loop/README.md)
+- [Workshop 02 — Sequential Pipeline](./workshops/02-pipeline/README.md)
 
 ## Project layout
 
