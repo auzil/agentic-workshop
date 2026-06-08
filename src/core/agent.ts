@@ -54,44 +54,20 @@ export class Agent {
    *   4. If we've looped `maxSteps` times without finishing, throw.
    */
   async run(input: string): Promise<string> {
-    // ─────────────────────────────────────────────────────────────────
-    //  TODO (Workshop 01) — implement the agent loop here.
-    //
-    //  Files you'll need:
-    //    • getLlm()          from './llm.js'   — the Gemini client
-    //    • toGeminiTools()   from './tool.js'  — converts Tool[] → SDK shape
-    //    • this.logger       — call .llmCall, .toolCall, .toolResult, .llmText
-    //    • this.tools        — Map<string, Tool> of available tools
-    //    • Content type      from '@google/genai' — the conversation history shape
-    //
-    //  Walkthrough lives in:
-    //    workshops/01-agent-loop/README.md
-    //
-    //  Reference (for the SDK call shape and multi-turn pattern):
-    //    docs/01-gemini-sdk.md  →  "The agent loop"
-    // ─────────────────────────────────────────────────────────────────
-    void input;
-    void getLlm;
-    void toGeminiTools;
-    const _placeholder: Content[] = [];
-    void _placeholder;
-
-    const history: Content[] = [
-      { role: 'user', parts: [{text: input}] },
+    const contents: Content[] = [
+      { role: 'user', parts: [{ text: input }] },
     ];
+    const tools = toGeminiTools([...this.tools.values()]);
 
-    let step = 0;
-  
-    while (step < this.maxSteps) {
-
+    for (let step = 0; step < this.maxSteps; step++) {
       this.logger.llmCall(this.model, [...this.tools.keys()]);
 
       const response = await getLlm().models.generateContent({
         model: this.model,
-        contents: history,
+        contents,
         config: {
           systemInstruction: this.instructions,
-          tools: toGeminiTools(Array.from(this.tools.values())),
+          ...(tools.length > 0 ? { tools } : {}),
         },
       });
 
@@ -102,42 +78,53 @@ export class Agent {
         return text;
       }
 
-      history.push({ role: 'model', parts: calls.map( call => ({functionCall: call})) });
-
-      const toolResults = [];
-      for (const call of calls) {
-       console.log('Model called tool:', JSON.stringify(call));
-
-       if (call.name === undefined) {
-        throw new Error(`Model made a function call without a name!`);
-       }
-
-        const tool = this.tools.get(call.name);
-
-        if (!tool) {
-          throw new Error(`Model called unknown tool: ${call.name}`);
-        }
-
-        const args = call.args ?? {};
-        const result = await tool.execute(args);
-        this.logger.toolCall(tool.name, args);
-        this.logger.toolResult(tool.name, result);
-        toolResults.push({ id: call.id, name: tool.name, result }); 
-      }
-
-      history.push({ 
-        role: 'user',
-        parts: toolResults.map(tr => ({
-          functionResponse: { id: tr.id, name: tr.name, response: { result: tr.result } }
-        }))
+      contents.push({
+        role: 'model',
+        parts: calls.map((call) => ({ functionCall: call })),
       });
 
-      step++;
+      const responseParts = await Promise.all(
+        calls.map(async (call) => {
+          const name = call.name;
+          if (!name) {
+            throw new Error('Model returned a function call without a name.');
+          }
+          const tool = this.tools.get(name);
+          if (!tool) {
+            throw new Error(`Model called unknown tool: ${name}`);
+          }
+          this.logger.toolCall(name, call.args);
+          try {
+            const result = await tool.execute(
+              (call.args ?? {}) as Record<string, unknown>,
+            );
+            this.logger.toolResult(name, result);
+            return {
+              functionResponse: {
+                id: call.id,
+                name,
+                response: { result },
+              },
+            };
+          } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : String(err);
+            this.logger.error(`tool ${name} threw: ${message}`);
+            return {
+              functionResponse: {
+                id: call.id,
+                name,
+                response: { error: message },
+              },
+            };
+          }
+        }),
+      );
+
+      contents.push({ role: 'user', parts: responseParts });
     }
 
     throw new Error(
-      `Agent.run() is not yet implemented — that's the Workshop 01 exercise. ` +
-        `Open workshops/01-agent-loop/README.md to begin.`,
+      `Agent ${this.name} exceeded maxSteps (${this.maxSteps}) without producing a final answer.`,
     );
   }
 }
