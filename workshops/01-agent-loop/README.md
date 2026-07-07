@@ -27,7 +27,7 @@ That's the whole pattern. No frameworks needed. By the end of this hour you'll h
 
 ```bash
 npm install
-cp .env.example .env       # then put your GEMINI_API_KEY in
+cp .env.example .env       # then fill in your Azure OpenAI credentials
 ```
 
 Confirm types compile:
@@ -46,14 +46,14 @@ Skim these in order before writing anything:
 
 | File | What it does |
 | ---- | ------------ |
-| [`src/core/messages.ts`](../../src/core/messages.ts) | Re-exports the SDK's `Content` / `Part` types. The conversation history is a `Content[]`. |
-| [`src/core/tool.ts`](../../src/core/tool.ts) | Defines our `Tool` interface and `toGeminiTools()` — converts our tools into the SDK's expected shape. |
-| [`src/core/llm.ts`](../../src/core/llm.ts) | `getLlm()` returns the Gemini client. `DEFAULT_MODEL` is `gemini-2.5-flash`. |
+| [`src/core/messages.ts`](../../src/core/messages.ts) | Re-exports the SDK's `Content` type (`ChatCompletionMessageParam`). The conversation history is a `Content[]`. |
+| [`src/core/tool.ts`](../../src/core/tool.ts) | Defines our `Tool` interface and `toOpenAITools()` — converts our tools into the shape the API expects. |
+| [`src/core/llm.ts`](../../src/core/llm.ts) | `getLlm()` returns the Azure OpenAI client. `DEFAULT_MODEL` comes from `AZURE_OPENAI_MODEL` in `.env`. |
 | [`src/core/logger.ts`](../../src/core/logger.ts) | Pretty terminal logger — call `this.logger.llmCall(...)`, `.toolCall(...)`, etc. |
 | [`src/core/agent.ts`](../../src/core/agent.ts) | **Your job.** Constructor and types are done; `run()` is the exercise. |
 | [`src/tools/calculator.ts`](../../src/tools/calculator.ts) | The first tool. The starter agent uses it. |
 
-For the SDK shape (what `generateContent` returns, what a `functionCall` part looks like), keep [`docs/01-gemini-sdk.md`](../../docs/01-gemini-sdk.md) open.
+For the SDK shape (what `chat.completions.create` returns, what a `tool_calls` entry looks like), keep the [OpenAI function calling docs](https://platform.openai.com/docs/guides/function-calling) open.
 
 ## The exercise — step by step
 
@@ -69,10 +69,10 @@ You'll see a clear error: `Agent.run() is not yet implemented`. Good — that me
 
 Open `src/core/agent.ts`. The `run(input)` method needs to:
 
-1. Initialize a `Content[]` history with the user input.
+1. Initialize a `ChatCompletionMessageParam[]` history with a `system` message (instructions) and the first `user` message.
 2. Loop up to `this.maxSteps` times:
-   - Call `getLlm().models.generateContent({...})` with the current history, plus your tools and the system instruction.
-   - If the response contains `functionCalls`, execute each tool, append both turns to history, and continue the loop.
+   - Call `getLlm().chat.completions.create({...})` with the current history and tool declarations.
+   - If the response contains `tool_calls`, execute each tool, append both the assistant turn and the tool-result turns to history, then loop.
    - If the response is text, log it and return it.
 3. If we exhaust `maxSteps`, throw with a useful error.
 
@@ -81,13 +81,10 @@ Open `src/core/agent.ts`. The `run(input)` method needs to:
 Inside the loop, the request looks like this (adapt to use your fields):
 
 ```ts
-const response = await getLlm().models.generateContent({
+const response = await getLlm().chat.completions.create({
   model: this.model,
-  contents,
-  config: {
-    systemInstruction: this.instructions,
-    tools: toGeminiTools([...this.tools.values()]),
-  },
+  messages,
+  tools: toOpenAITools([...this.tools.values()]),
 });
 ```
 
@@ -96,45 +93,44 @@ Log the call with `this.logger.llmCall(this.model, [...this.tools.keys()])` *bef
 ### Step 4 — Branch on tool calls vs text
 
 ```ts
-const calls = response.functionCalls ?? [];
-if (calls.length === 0) {
-  const text = response.text ?? '';
+const message = response.choices[0]?.message;
+const toolCalls = message.tool_calls ?? [];
+if (toolCalls.length === 0) {
+  const text = message.content ?? '';
   this.logger.llmText(text);
   return text;
 }
 ```
 
-### Step 5 — Append the model's tool-call turn
+### Step 5 — Append the assistant's tool-call turn
 
-The model's tool-call response has to be added to history *before* the tool results, with `role: 'model'`:
+The assistant's turn (which carries the tool call requests) must be added to history *before* the results:
 
 ```ts
-contents.push({
-  role: 'model',
-  parts: calls.map((call) => ({ functionCall: call })),
+messages.push({
+  role: 'assistant',
+  content: message.content,
+  tool_calls: message.tool_calls,
 });
 ```
 
 ### Step 6 — Execute each tool, append results
 
-For each `call`:
+For each `call` in `toolCalls`:
 
-- Look it up: `const tool = this.tools.get(call.name);`
-- If missing, throw — the model called something we don't have.
-- Otherwise, execute and capture the result.
-
-Append all results as a single `role: 'user'` turn (yes, *user* — the SDK uses the user role for anything coming back into the model, including tool outputs):
+- Name and args come from `call.function.name` and `JSON.parse(call.function.arguments)`.
+- Look the tool up: `const tool = this.tools.get(name);` — if missing, throw.
+- Execute and add one `role: 'tool'` message per result, keyed by `tool_call_id`:
 
 ```ts
-contents.push({
-  role: 'user',
-  parts: results.map((r) => ({
-    functionResponse: { id: r.id, name: r.name, response: { result: r.result } },
-  })),
+messages.push({
+  role: 'tool',
+  tool_call_id: call.id,
+  content: JSON.stringify(result),
 });
 ```
 
-Use `Promise.all` to run independent tool calls in parallel — the SDK matches results to calls via `id`, so order doesn't matter.
+Use `Promise.all` to run independent tool calls in parallel, then push all results before looping.
 
 Don't forget to log: `this.logger.toolCall(name, args)` before, `.toolResult(name, result)` after.
 
@@ -147,13 +143,13 @@ npm run ws:01
 You should see the agent call the calculator, get a result, and produce a final answer. The terminal should look something like:
 
 ```
-[math-tutor] → llm    model=gemini-2.5-flash tools=[calculator]
+[math-tutor] → llm    model=gpt-4o tools=[calculator]
 [math-tutor] → tool   calculator({"expression":"47 * 12"})
 [math-tutor] ← result calculator → {"result":564}
-[math-tutor] → llm    model=gemini-2.5-flash tools=[calculator]
+[math-tutor] → llm    model=gpt-4o tools=[calculator]
 [math-tutor] → tool   calculator({"expression":"1024 / 8"})
 [math-tutor] ← result calculator → {"result":128}
-[math-tutor] → llm    model=gemini-2.5-flash tools=[calculator]
+[math-tutor] → llm    model=gpt-4o tools=[calculator]
 [math-tutor] ← text   The result is 692.
 ```
 
@@ -180,75 +176,61 @@ Stuck or want to compare? Expand:
 
 ```ts
 async run(input: string): Promise<string> {
-  const contents: Content[] = [
-    { role: 'user', parts: [{ text: input }] },
+  const messages: ChatCompletionMessageParam[] = [
+    { role: 'system', content: this.instructions },
+    { role: 'user', content: input },
   ];
-  const tools = toGeminiTools([...this.tools.values()]);
+  const tools = toOpenAITools([...this.tools.values()]);
 
   for (let step = 0; step < this.maxSteps; step++) {
     this.logger.llmCall(this.model, [...this.tools.keys()]);
 
-    const response = await getLlm().models.generateContent({
+    const response = await getLlm().chat.completions.create({
       model: this.model,
-      contents,
-      config: {
-        systemInstruction: this.instructions,
-        ...(tools.length > 0 ? { tools } : {}),
-      },
+      messages,
+      ...(tools.length > 0 ? { tools } : {}),
     });
 
-    const calls = response.functionCalls ?? [];
+    const message = response.choices[0]?.message;
+    if (!message) {
+      throw new Error('Azure OpenAI returned a response with no choices.');
+    }
 
-    if (calls.length === 0) {
-      const text = response.text ?? '';
+    const toolCalls = message.tool_calls ?? [];
+    if (toolCalls.length === 0) {
+      const text = message.content ?? '';
       this.logger.llmText(text);
       return text;
     }
 
-    contents.push({
-      role: 'model',
-      parts: calls.map((call) => ({ functionCall: call })),
+    messages.push({
+      role: 'assistant',
+      content: message.content,
+      tool_calls: message.tool_calls,
     });
 
-    const responseParts = await Promise.all(
-      calls.map(async (call) => {
-        // call.name is typed as string | undefined in the SDK, so narrow first.
-        const name = call.name;
-        if (!name) {
-          throw new Error('Model returned a function call without a name.');
-        }
+    const toolResults = await Promise.all(
+      toolCalls.map(async (call) => {
+        const name = call.function.name;
+        const args = JSON.parse(call.function.arguments) as Record<string, unknown>;
         const tool = this.tools.get(name);
         if (!tool) {
           throw new Error(`Model called unknown tool: ${name}`);
         }
-        this.logger.toolCall(name, call.args);
+        this.logger.toolCall(name, args);
         try {
-          const result = await tool.execute(
-            (call.args ?? {}) as Record<string, unknown>,
-          );
+          const result = await tool.execute(args);
           this.logger.toolResult(name, result);
-          return {
-            functionResponse: {
-              id: call.id,
-              name,
-              response: { result },
-            },
-          };
+          return { role: 'tool' as const, tool_call_id: call.id, content: JSON.stringify(result) };
         } catch (err: unknown) {
-          const message = err instanceof Error ? err.message : String(err);
-          this.logger.error(`tool ${name} threw: ${message}`);
-          return {
-            functionResponse: {
-              id: call.id,
-              name,
-              response: { error: message },
-            },
-          };
+          const msg = err instanceof Error ? err.message : String(err);
+          this.logger.error(`tool ${name} threw: ${msg}`);
+          return { role: 'tool' as const, tool_call_id: call.id, content: JSON.stringify({ error: msg }) };
         }
       }),
     );
 
-    contents.push({ role: 'user', parts: responseParts });
+    messages.push(...toolResults);
   }
 
   throw new Error(

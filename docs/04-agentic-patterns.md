@@ -40,7 +40,7 @@ Every workshop assumes this baseline. In our codebase the augmented LLM **is** t
 
 **Critical principle from the source:** *"Design toolsets and their documentation clearly and thoughtfully."* Most agent failures are tool-design failures.
 
-**What we build:** `src/core/agent.ts` — an `Agent` class with a `run(input: string): Promise<string>` method that loops over `generateContent` calls, executing function calls until the model emits text.
+**What we build:** `src/core/agent.ts` — an `Agent` class with a `run(input: string): Promise<string>` method that loops over `chat.completions.create` calls, executing tool calls until the model emits text.
 
 ---
 

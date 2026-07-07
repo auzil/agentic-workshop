@@ -4,7 +4,7 @@ The runtime, build, and style choices for this repo. Each section names the choi
 
 ## Runtime: Node.js 22+
 
-- The `@google/genai` SDK requires **Node 18+**.
+- The `openai` SDK requires **Node 18+**.
 - Node 22 is the current LTS at the time of writing and supports ESM, top-level `await`, and `--env-file` natively.
 - Node 22.18+ also runs `.ts` files natively (with `--experimental-strip-types`), which we treat as a future-proofing direction but do not yet rely on.
 
@@ -18,7 +18,7 @@ Pin in `package.json`:
 
 We set `"type": "module"` in `package.json`. This is the modern default:
 
-- `@google/genai` is ESM-first.
+- The `openai` package is ESM-compatible.
 - Top-level `await` works without ceremony.
 - Aligns with the direction Node native TS support is moving in.
 
@@ -36,11 +36,11 @@ Why not Node native TS (`--experimental-strip-types`)?
 
 - Still flagged experimental as of Node 22 in our research.
 - Doesn't support TS-only syntax (enums, decorators, namespaces) without an additional `--experimental-transform-types` flag.
-- `@google/genai` exports the `Type` enum, which is TS-side and is erased at runtime — that works under strip-types, but we want students to focus on the agent loop, not on Node's TS flags.
+- `tsx` is faster, has zero config, and supports ESM out of the box.
 
 Why not `ts-node`?
 
-- `tsx` is faster, has zero config, and supports ESM out of the box.
+- `tsx` is faster and has zero config.
 
 When Node's native TS support stabilizes, the migration is one-line: drop `tsx` and run `node` directly. Our import style (see below) is already compatible.
 
@@ -68,7 +68,7 @@ When Node's native TS support stabilizes, the migration is one-line: drop `tsx` 
 
 Notable choices:
 
-- **`module` / `moduleResolution`: `NodeNext`** — the orthodox setting for Node ESM in 2026. Plays correctly with `tsx` and is the path Node's native TS support is on. The alternative `bundler` would let us skip extensions in imports but isn't appropriate for a Node-targeted project.
+- **`module` / `moduleResolution`: `NodeNext`** — the orthodox setting for Node ESM in 2026. Plays correctly with `tsx` and is the path Node's native TS support is on.
 - **`noEmit: true`** — we never run `tsc` for output; `tsx` handles execution. `tsc --noEmit` is what we run for type-checking.
 - **`strict: true`** — non-negotiable for teaching material. Loose typing teaches the wrong habits.
 - **`noUncheckedIndexedAccess: true`** — `array[i]` is `T | undefined`. Forces students to think about empty cases.
@@ -85,12 +85,18 @@ import { Agent } from './agent.js';
 import { Agent } from './agent';
 ```
 
-This is a Node ESM rule, inherited by NodeNext module resolution. The `.js` specifier maps to the `.ts` source at compile/resolve time. It is what Node's native TS support also expects, so this style is portable.
+This is a Node ESM rule, inherited by NodeNext module resolution. The `.js` specifier maps to the `.ts` source at compile/resolve time.
 
 Imports of npm packages are unaffected:
 
 ```ts
-import { GoogleGenAI } from '@google/genai';
+import { AzureOpenAI } from 'openai';
+```
+
+For `openai` subpath imports (required for some types under NodeNext), use the `.js` extension on the subpath too:
+
+```ts
+import type { ChatCompletionTool } from 'openai/resources/chat/completions.js';
 ```
 
 ## Project layout
@@ -108,8 +114,8 @@ ai-agentic-workshop1/
 │   ├── core/                     # shared library — the base extended each workshop
 │   │   ├── agent.ts              # Agent class (built in W1, used in W2–W5)
 │   │   ├── tool.ts               # Tool interface + helpers
-│   │   ├── llm.ts                # Gemini client wrapper
-│   │   ├── messages.ts           # Content / Part types
+│   │   ├── llm.ts                # Azure OpenAI client wrapper
+│   │   ├── messages.ts           # Content type alias
 │   │   ├── logger.ts             # Pretty step logger
 │   │   └── index.ts              # Barrel — public exports
 │   └── tools/                    # reusable tool implementations
@@ -160,7 +166,7 @@ We use Node's built-in `--env-file` flag — no `dotenv` dependency:
 }
 ```
 
-`.env.example` is committed; `.env` is `.gitignore`d. Students copy and fill in.
+`.env.example` is committed; `.env` is `.gitignore`d. Students copy and fill in their Azure credentials.
 
 ## Linting and formatting
 
@@ -170,6 +176,6 @@ Out of scope for the workshop repo. The constraint is that the code passes `tsc 
 
 Hard-cap on production dependencies for the workshop core:
 
-- `@google/genai` — required.
+- `openai` — required.
 
 That's it. Dev dependencies: `typescript`, `tsx`, `@types/node`. Anything else has to justify itself against the cost of one more thing students have to learn.

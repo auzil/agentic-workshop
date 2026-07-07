@@ -1,7 +1,7 @@
 {
   "name": "ai-agentic-workshop1",
   "version": "0.1.0",
-  "description": "Hands-on workshop series: building agentic AI systems with TypeScript and Gemini.",
+  "description": "Hands-on workshop series: building agentic AI systems with TypeScript and Azure OpenAI.",
   "private": true,
   "type": "module",
   "engines": {
@@ -15,7 +15,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@google/genai": "^1.50.1"
+    "openai": "^4.104.0"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
