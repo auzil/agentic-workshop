@@ -19,31 +19,36 @@
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     }
 
+    .reveal .slides section {
+      padding: 6px 20px;
+      box-sizing: border-box;
+    }
+
     .reveal h1, .reveal h2, .reveal h3 {
       text-transform: none;
       letter-spacing: -0.01em;
     }
 
-    .reveal h1 { color: var(--accent); font-size: 2.2em; }
-    .reveal h2 { color: #fff; font-size: 1.5em; border-bottom: 2px solid var(--accent); padding-bottom: 0.2em; margin-bottom: 0.6em; }
-    .reveal h3 { color: var(--accent2); font-size: 1.1em; margin-bottom: 0.3em; }
+    .reveal h1 { color: var(--accent); font-size: 1.4em; margin-bottom: 0.2em; }
+    .reveal h2 { color: #fff; font-size: 0.95em; border-bottom: 2px solid var(--accent); padding-bottom: 0.08em; margin-bottom: 0.25em; }
+    .reveal h3 { color: var(--accent2); font-size: 0.78em; margin-bottom: 0.15em; }
 
     .reveal pre {
       box-shadow: none;
       border-left: 3px solid var(--accent);
-      margin: 0.4em 0;
+      margin: 0.25em 0;
     }
 
     .reveal code {
       font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-      font-size: 0.85em;
+      font-size: 0.7em;
     }
 
     .reveal pre code {
-      font-size: 0.72em;
-      line-height: 1.5;
+      font-size: 0.58em;
+      line-height: 1.3;
       background: var(--code-bg);
-      padding: 0.8em 1em;
+      padding: 0.5em 0.8em;
     }
 
     .dim { color: var(--dim); }
@@ -54,8 +59,8 @@
 
     .reveal .diagram {
       font-family: 'JetBrains Mono', 'Fira Code', monospace;
-      font-size: 0.82em;
-      line-height: 1.6;
+      font-size: 0.72em;
+      line-height: 1.5;
       background: var(--code-bg);
       border-left: 3px solid var(--accent2);
       padding: 0.7em 1.2em;
@@ -67,9 +72,9 @@
     .cols { display: flex; gap: 2em; align-items: flex-start; }
     .col { flex: 1; }
 
-    .reveal table { font-size: 0.8em; border-collapse: collapse; }
-    .reveal table th { color: var(--accent); border-bottom: 1px solid #444; padding: 0.4em 0.7em; }
-    .reveal table td { padding: 0.35em 0.7em; border-bottom: 1px solid #222; }
+    .reveal table { font-size: 0.72em; border-collapse: collapse; width: 100%; }
+    .reveal table th { color: var(--accent); border-bottom: 1px solid #444; padding: 0.25em 0.5em; }
+    .reveal table td { padding: 0.2em 0.5em; border-bottom: 1px solid #222; }
     .reveal table tr:hover td { background: #1a2130; }
 
     .pill {
@@ -84,7 +89,7 @@
     .pill-green { background: #0d2e1a; color: #56d364; }
 
     .step-list { list-style: none; padding: 0; margin: 0; }
-    .step-list li { display: flex; align-items: baseline; gap: 0.6em; margin: 0.4em 0; font-size: 0.88em; }
+    .step-list li { display: flex; align-items: baseline; gap: 0.5em; margin: 0.2em 0; font-size: 0.75em; }
     .step-num { background: var(--accent); color: #000; border-radius: 50%; width: 1.4em; height: 1.4em; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85em; flex-shrink: 0; }
 
     .title-meta { color: var(--dim); font-size: 0.75em; margin-top: 0.8em; letter-spacing: 0.05em; }
@@ -114,6 +119,22 @@
     .roadmap-card .ws-name { color: #fff; margin: 0.2em 0; font-weight: 600; display: block; }
     .roadmap-card .ws-pattern { color: var(--dim); display: block; }
     .roadmap-card.active .ws-name { color: var(--accent); }
+
+    .doc-link {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8em;
+      background: #0d1520;
+      border: 1px solid #1e3050;
+      border-radius: 8px;
+      padding: 0.6em 0.9em;
+      margin: 0.4em 0;
+      text-decoration: none;
+    }
+    .doc-link:hover { border-color: var(--accent); background: #0c1e2e; }
+    .doc-link .doc-icon { font-size: 1.2em; flex-shrink: 0; margin-top: 0.05em; }
+    .doc-link .doc-title { color: var(--accent); font-size: 0.82em; font-weight: 600; display: block; }
+    .doc-link .doc-desc  { color: var(--dim); font-size: 0.72em; display: block; margin-top: 0.1em; }
   </style>
 </head>
 <body>
@@ -133,163 +154,270 @@
   </div>
 </section>
 
-<!-- ────────────── SLIDE 2: Roadmap ────────────── -->
-<section>
-  <h2>Five workshops, one build</h2>
-  <p class="dim" style="font-size:0.8em;">Each workshop imports and extends what the previous one built.</p>
-  <div class="roadmap-grid">
-    <div class="roadmap-card active">
-      <span class="ws-num">01</span>
-      <span class="ws-name">Agent Loop</span>
-      <span class="ws-pattern">Autonomous agent</span>
-    </div>
-    <div class="roadmap-card">
-      <span class="ws-num">02</span>
-      <span class="ws-name">Pipeline</span>
-      <span class="ws-pattern">Prompt chaining</span>
-    </div>
-    <div class="roadmap-card">
-      <span class="ws-num">03</span>
-      <span class="ws-name">Router</span>
-      <span class="ws-pattern">Routing + orchestrator</span>
-    </div>
-    <div class="roadmap-card">
-      <span class="ws-num">04</span>
-      <span class="ws-name">Fan-Out</span>
-      <span class="ws-pattern">Parallelization</span>
-    </div>
-    <div class="roadmap-card">
-      <span class="ws-num">05</span>
-      <span class="ws-name">Reflection</span>
-      <span class="ws-pattern">Evaluator-optimizer</span>
-    </div>
-  </div>
-  <p style="margin-top:0.9em; font-size:0.75em;">
-    <span class="accent">Today</span> you build <code>src/core/agent.ts</code> —
-    the <code>Agent</code> class that <strong>all subsequent workshops import</strong>.
-  </p>
-</section>
-
-<!-- ────────────── SLIDE 3: What is an agent? ────────────── -->
+<!-- ────────────── SLIDE 2: What is an agent? ────────────── -->
 <section>
   <h2>What is an agent?</h2>
-  <p style="font-size:0.9em; line-height:1.6;">
+  <p style="font-size:0.88em; line-height:1.4;">
     An agent is an <span class="accent">LLM in a loop</span>.<br />
     On each turn, the model does exactly one of two things:
   </p>
-  <div style="margin-top:0.8em; display:flex; gap:1.5em; justify-content:center;">
-    <div style="background:#0c1e0c; border:1px solid #56d364; border-radius:8px; padding:0.8em 1.2em; flex:1; max-width:280px;">
-      <p class="ok" style="margin:0 0 0.4em; font-weight:700; font-size:0.9em;">✓ Emits text</p>
+  <div style="margin-top:0.5em; display:flex; gap:1.5em; justify-content:center;">
+    <div style="background:#0c1e0c; border:1px solid #56d364; border-radius:8px; padding:0.6em 1.2em; flex:1; max-width:280px;">
+      <p class="ok" style="margin:0 0 0.3em; font-weight:700; font-size:0.9em;">✓ Emits text</p>
       <p style="font-size:0.78em; margin:0; color:#ccc;">We're done. Return it to the caller.</p>
     </div>
-    <div style="background:#1e1c0c; border:1px solid var(--accent2); border-radius:8px; padding:0.8em 1.2em; flex:1; max-width:280px;">
-      <p class="accent2" style="margin:0 0 0.4em; font-weight:700; font-size:0.9em;">⚙ Emits tool calls</p>
+    <div style="background:#1e1c0c; border:1px solid var(--accent2); border-radius:8px; padding:0.6em 1.2em; flex:1; max-width:280px;">
+      <p class="accent2" style="margin:0 0 0.3em; font-weight:700; font-size:0.9em;">⚙ Emits tool calls</p>
       <p style="font-size:0.78em; margin:0; color:#ccc;">Execute them, feed results back, loop.</p>
     </div>
   </div>
-  <p style="margin-top:1em; font-size:0.78em; color:var(--dim);">That's the whole pattern. No framework needed.</p>
+  <p style="margin-top:0.5em; font-size:0.78em; color:var(--dim);">That's the whole pattern. No framework needed.</p>
+</section>
+
+<!-- ────────────── SLIDE 3: Function calling — what it is ────────────── -->
+<section>
+  <h2>Under the hood: function calling</h2>
+  <p style="font-size:0.82em; color:var(--dim); margin-bottom:0.3em;">
+    The model doesn't run code. It emits <span class="accent">structured JSON</span> describing what to call.
+    The API returns that as <code>tool_calls</code> instead of plain text.
+  </p>
+  <div class="cols">
+    <div class="col">
+      <h3>You send</h3>
+      <pre style="border-left-color:var(--accent2);"><code class="language-typescript">tools: [{
+  type: 'function',
+  function: {
+    name: 'calculator',
+    description: '...',
+    parameters: { ... }
+  }
+}]</code></pre>
+    </div>
+    <div class="col">
+      <h3>Model responds with</h3>
+      <pre style="border-left-color:#56d364;"><code class="language-json">{
+  "role": "assistant",
+  "content": null,
+  "tool_calls": [{
+    "id": "call_abc123",
+    "type": "function",
+    "function": {
+      "name": "calculator",
+      "arguments": "{\"expression\":\"47*12\"}"
+    }
+  }]
+}</code></pre>
+      <p style="font-size:0.72em; color:var(--dim); margin:0.3em 0 0;">
+        <code>arguments</code> is a JSON string — parse with <code>JSON.parse()</code>.
+      </p>
+    </div>
+  </div>
 </section>
 
 <!-- ────────────── SLIDE 4: The loop diagram ────────────── -->
 <section>
-  <h2>The loop</h2>
-  <div style="text-align:center; margin: 0.4em 0 0.8em;">
-    <div class="diagram">┌────────┐  prompt   ┌─────────────────┐  tool calls  ┌──────────┐
-│  user  │──────────▶│     Agent       │─────────────▶│  tools   │
-└────────┘           │  (LLM in loop)  │◀─────────────│          │
-                     │                 │   results    └──────────┘
-                     └─────────────────┘
-                            │
-                            │ final text answer
-                            ▼</div>
-  </div>
-  <div style="font-size:0.75em; color:var(--dim);">
-    <strong style="color:#fff;">Key insight:</strong>
-    the model <em>decides</em> when it's done — not the programmer.
-    The loop only exits when the model returns text (or we hit <code>maxSteps</code>).
-  </div>
-</section>
+  <h2 style="font-size:1.3em; margin-bottom:0.3em;">The loop</h2>
+  <svg viewBox="0 0 760 310" xmlns="http://www.w3.org/2000/svg"
+       style="width:100%; height:auto; display:block; max-height:72vh;">
+    <defs>
+      <marker id="arr-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#61dafb"/>
+      </marker>
+      <marker id="arr-amber" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#f7b93e"/>
+      </marker>
+      <marker id="arr-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#56d364"/>
+      </marker>
+    </defs>
 
-<!-- ────────────── SLIDE 5: Message history ────────────── -->
-<section>
-  <h2>The conversation is a list</h2>
-  <p style="font-size:0.82em; color:var(--dim); margin-bottom:0.5em;">Everything the agent "knows" lives in <code>ChatCompletionMessageParam[]</code>.</p>
-  <pre><code class="language-typescript">// Four roles — each a different node in the conversation
-{ role: 'system',    content: '...' }       // instructions — sent every turn
-{ role: 'user',      content: '...' }       // the user's input
-{ role: 'assistant', content: '...', tool_calls: [...] } // model's turn
-{ role: 'tool',      tool_call_id: '...',   // result of one tool call
-                     content: '...' }</code></pre>
-  <p style="font-size:0.78em; margin-top:0.7em;">
-    The agent loop is mostly <span class="accent">bookkeeping over this list</span>:
-    append the model's turn, append each tool result, repeat.
+    <!-- USER box -->
+    <rect x="10" y="90" width="130" height="80" rx="10"
+          fill="#0c1e2e" stroke="#61dafb" stroke-width="2"/>
+    <text x="75" y="136" text-anchor="middle" dominant-baseline="middle"
+          fill="#ffffff" font-family="system-ui,sans-serif" font-size="20" font-weight="700">USER</text>
+
+    <!-- AGENT box -->
+    <rect x="265" y="40" width="230" height="195" rx="10"
+          fill="#0c1e2e" stroke="#61dafb" stroke-width="3"/>
+    <text x="380" y="108" text-anchor="middle" dominant-baseline="middle"
+          fill="#61dafb" font-family="system-ui,sans-serif" font-size="22" font-weight="700">AGENT</text>
+    <path d="M350,132 a28,28 0 1,1 56,0" fill="none" stroke="#2a4a6a" stroke-width="2"/>
+    <polygon points="406,130 412,144 399,140" fill="#2a4a6a"/>
+    <text x="380" y="165" text-anchor="middle" dominant-baseline="middle"
+          fill="#8b9cbf" font-family="'JetBrains Mono',monospace" font-size="13">LLM in loop</text>
+    <text x="380" y="200" text-anchor="middle" dominant-baseline="middle"
+          fill="#4a6080" font-family="'JetBrains Mono',monospace" font-size="11">chat.completions.create</text>
+
+    <!-- TOOLS box -->
+    <rect x="600" y="90" width="150" height="80" rx="10"
+          fill="#1a1800" stroke="#f7b93e" stroke-width="2"/>
+    <text x="675" y="136" text-anchor="middle" dominant-baseline="middle"
+          fill="#ffffff" font-family="system-ui,sans-serif" font-size="20" font-weight="700">TOOLS</text>
+
+    <!-- prompt arrow -->
+    <line x1="141" y1="120" x2="263" y2="105"
+          stroke="#61dafb" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+    <text x="198" y="102" text-anchor="middle"
+          fill="#61dafb" font-family="system-ui,sans-serif" font-size="13" font-style="italic">prompt</text>
+
+    <!-- tool calls arrow -->
+    <line x1="496" y1="112" x2="598" y2="112"
+          stroke="#f7b93e" stroke-width="2.5" marker-end="url(#arr-amber)"/>
+    <text x="547" y="102" text-anchor="middle"
+          fill="#f7b93e" font-family="system-ui,sans-serif" font-size="13" font-style="italic">tool calls</text>
+
+    <!-- results arrow -->
+    <line x1="598" y1="150" x2="496" y2="158"
+          stroke="#f7b93e" stroke-width="2.5" marker-end="url(#arr-amber)"/>
+    <text x="547" y="175" text-anchor="middle"
+          fill="#f7b93e" font-family="system-ui,sans-serif" font-size="13" font-style="italic">results</text>
+
+    <!-- final answer arrow -->
+    <line x1="380" y1="236" x2="380" y2="295"
+          stroke="#56d364" stroke-width="2.5" marker-end="url(#arr-green)"/>
+    <text x="394" y="273" dominant-baseline="middle"
+          fill="#56d364" font-family="system-ui,sans-serif" font-size="13" font-style="italic">final answer</text>
+  </svg>
+  <p style="font-size:0.68em; color:var(--dim); margin-top:0.3em;">
+    The model <em style="color:#fff;">decides</em> when it's done — loop exits on text, or when <code>maxSteps</code> is hit.
   </p>
 </section>
 
-<!-- ────────────── SLIDE 6: The step-by-step loop ────────────── -->
+<!-- ────────────── SLIDE 5: The conversation is a list ────────────── -->
+<section>
+  <h2>The conversation is a list</h2>
+  <p style="font-size:0.82em; color:var(--dim); margin-bottom:0.5em;">
+    Everything the agent "knows" lives in <code>ChatCompletionMessageParam[]</code>.
+    The loop is mostly bookkeeping over this array.
+  </p>
+  <pre><code class="language-typescript">// Four roles — the full vocabulary of a conversation
+{ role: 'system',    content: '...' }
+// ↑ model's persona — prepended once, present on every LLM call
+
+{ role: 'user',      content: '...' }
+// ↑ the human's input
+
+{ role: 'assistant', content: null, tool_calls: [...] }
+// ↑ model's turn when it wants to call tools — content is null here
+
+{ role: 'tool',      tool_call_id: 'call_abc123', content: '{"result":564}' }
+// ↑ one message per tool result, linked back by tool_call_id</code></pre>
+</section>
+
+<!-- ────────────── SLIDE 6: What the response looks like ────────────── -->
+<section>
+  <h2>Two shapes of response</h2>
+  <p style="font-size:0.8em; color:var(--dim); margin-bottom:0.4em;">
+    <code>response.choices[0].message</code> takes one of exactly two forms.
+  </p>
+  <div class="cols">
+    <div class="col">
+      <h3 style="color:#56d364;">Text answer — loop exits</h3>
+      <pre style="border-left-color:#56d364;"><code class="language-json">{
+  "role": "assistant",
+  "content": "The answer is 564.",
+  "tool_calls": undefined
+}</code></pre>
+      <p style="font-size:0.72em; color:var(--dim);">
+        <code>tool_calls ?? []</code> is empty → return <code>content</code>.
+      </p>
+    </div>
+    <div class="col">
+      <h3 style="color:var(--accent2);">Tool call — keep looping</h3>
+      <pre style="border-left-color:var(--accent2);"><code class="language-json">{
+  "role": "assistant",
+  "content": null,
+  "tool_calls": [{
+    "id": "call_abc123",
+    "function": {
+      "name": "calculator",
+      "arguments": "{\"expression\":\"47*12\"}"
+    }
+  }]
+}</code></pre>
+      <p style="font-size:0.72em; color:var(--dim);">
+        Execute, append results, call the LLM again.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────── SLIDE 7: Loop step-by-step ────────────── -->
 <section>
   <h2>The loop, step by step</h2>
-  <ul class="step-list">
-    <li><div class="step-num">1</div>Init history with <code>system</code> + first <code>user</code> message.</li>
-    <li><div class="step-num">2</div>Call <code>chat.completions.create</code> with history + tool declarations.</li>
-    <li><div class="step-num">3</div>Read <code>response.choices[0].message</code>.</li>
-    <li><div class="step-num">4</div>
-      If <code>tool_calls</code> is empty → log the text, <strong>return</strong>. Done.
-    </li>
-    <li><div class="step-num">5</div>
-      Otherwise: append the assistant's tool-call turn to history.
-    </li>
-    <li><div class="step-num">6</div>
-      Execute each tool (<code>Promise.all</code>), append one <code>role: 'tool'</code>
-      message per result.
-    </li>
-    <li><div class="step-num">7</div>Loop. If we hit <code>maxSteps</code>, throw.</li>
-  </ul>
+  <ol style="padding-left:1.4em; margin:0.5em 0 0; font-size:0.88em; line-height:1.55;">
+    <li style="margin-bottom:0.35em;">Init history: <code>system</code> + first <code>user</code> message.</li>
+    <li style="margin-bottom:0.35em;">Call <code>chat.completions.create</code> with history + tool declarations.</li>
+    <li style="margin-bottom:0.35em;">Read <code>response.choices[0].message</code>.</li>
+    <li style="margin-bottom:0.35em;"><code>tool_calls</code> empty → log the text, <strong>return</strong>. Done.</li>
+    <li style="margin-bottom:0.35em;">Append the assistant's tool-call turn to history.</li>
+    <li style="margin-bottom:0.35em;">Execute each tool (<code>Promise.all</code>), append one <code>role:'tool'</code> message per result.</li>
+    <li>Loop. Hit <code>maxSteps</code> → throw.</li>
+  </ol>
 </section>
 
-<!-- ────────────── SLIDE 7: Why the order matters ────────────── -->
+<!-- ────────────── SLIDE 8: Why order matters ────────────── -->
 <section>
   <h2>Why order matters</h2>
-  <p style="font-size:0.82em; color:var(--dim);">The API enforces a strict message ordering. Get it wrong and you get a 400.</p>
-  <div class="diagram" style="font-size:0.76em;">Turn 1 ──────────────────────────────────────────────
-  [system]    "You are a math tutor…"
-  [user]      "What is 47 * 12?"
-──────────────────────────────────────────────────────
-  ← model responds with tool_calls
-──────────────────────────────────────────────────────
-Turn 2 ──────────────────────────────────────────────
-  [system]    "You are a math tutor…"
-  [user]      "What is 47 * 12?"
-  [assistant] tool_calls: [{ name:"calculator", args:{…} }]  ← append FIRST
-  [tool]      tool_call_id:"…", content:"564"                ← THEN result
-──────────────────────────────────────────────────────
-  ← model responds with final text</div>
+  <p style="font-size:0.8em; color:var(--dim); margin-bottom:0.6em;">The API enforces a strict message sequence. Get it wrong → HTTP 400.</p>
+  <div class="cols" style="gap:1.2em; align-items:stretch;">
+
+    <div class="col" style="flex:1;">
+      <p style="font-size:0.72em; color:var(--accent2); font-weight:600; margin:0 0 0.4em; text-transform:uppercase; letter-spacing:0.08em;">Turn 1 — you send</p>
+      <div style="display:flex; flex-direction:column; gap:5px;">
+        <div style="background:#0d1e30; border-left:3px solid #61dafb; padding:0.35em 0.6em; border-radius:3px; font-size:0.72em;"><span style="color:var(--accent);">system</span> <span style="color:var(--dim);">"You are a math tutor…"</span></div>
+        <div style="background:#0d200d; border-left:3px solid #56d364; padding:0.35em 0.6em; border-radius:3px; font-size:0.72em;"><span style="color:#56d364;">user</span> <span style="color:var(--dim);">"What is 47 * 12?"</span></div>
+      </div>
+      <p style="font-size:0.72em; color:var(--dim); margin:0.6em 0 0; text-align:center;">↓ model replies with <code>tool_calls</code></p>
+    </div>
+
+    <div style="display:flex; align-items:center; color:var(--accent2); font-size:1.4em; padding-top:1.4em;">→</div>
+
+    <div class="col" style="flex:1.3;">
+      <p style="font-size:0.72em; color:var(--accent2); font-weight:600; margin:0 0 0.4em; text-transform:uppercase; letter-spacing:0.08em;">Turn 2 — you send</p>
+      <div style="display:flex; flex-direction:column; gap:5px;">
+        <div style="background:#0d1e30; border-left:3px solid #61dafb; padding:0.35em 0.6em; border-radius:3px; font-size:0.72em;"><span style="color:var(--accent);">system</span> <span style="color:var(--dim);">"You are a math tutor…"</span></div>
+        <div style="background:#0d200d; border-left:3px solid #56d364; padding:0.35em 0.6em; border-radius:3px; font-size:0.72em;"><span style="color:#56d364;">user</span> <span style="color:var(--dim);">"What is 47 * 12?"</span></div>
+        <div style="background:#201e08; border-left:3px solid var(--accent2); padding:0.35em 0.6em; border-radius:3px; font-size:0.72em; display:flex; justify-content:space-between; align-items:center;">
+          <span><span style="color:var(--accent2);">assistant</span> <span style="color:var(--dim);">tool_calls: […]</span></span>
+          <span style="background:#2a2a00; color:var(--accent2); font-size:0.85em; padding:0.1em 0.4em; border-radius:3px;">← append FIRST</span>
+        </div>
+        <div style="background:#200d0d; border-left:3px solid #f85149; padding:0.35em 0.6em; border-radius:3px; font-size:0.72em; display:flex; justify-content:space-between; align-items:center;">
+          <span><span style="color:#f85149;">tool</span> <span style="color:var(--dim);">tool_call_id:"…" content:"564"</span></span>
+          <span style="background:#2a0000; color:#f85149; font-size:0.85em; padding:0.1em 0.4em; border-radius:3px;">← THEN result</span>
+        </div>
+      </div>
+      <p style="font-size:0.72em; color:var(--dim); margin:0.6em 0 0; text-align:center;">↓ model replies with final text</p>
+    </div>
+
+  </div>
 </section>
 
-<!-- ────────────── SLIDE 8: Tool design ────────────── -->
+<!-- ────────────── SLIDE 9: Tool design ────────────── -->
 <section>
   <h2>Tools: what the model sees</h2>
   <p style="font-size:0.8em; color:var(--dim); margin-bottom:0.5em;">
-    The <code>Tool</code> interface in <code>src/core/tool.ts</code> maps to the OpenAI function-calling spec.
+    <code>src/core/tool.ts</code> — the <code>Tool</code> interface maps directly to the OpenAI function-calling spec.
   </p>
   <pre><code class="language-typescript">export interface Tool&lt;TResult = unknown&gt; {
-  readonly name: string;         // the function name the model calls
+  readonly name: string;         // function name the model calls
   readonly description: string;  // how the model decides WHEN to use it
   readonly parameters: ToolParameters; // JSON Schema — shapes the args
   readonly execute: (args: Record&lt;string, unknown&gt;) =&gt; Promise&lt;TResult&gt;;
 }</code></pre>
   <p style="font-size:0.78em; margin-top:0.7em;">
     <span class="accent2">Most agent failures are tool-design failures.</span><br/>
-    The <code>name</code>, <code>description</code>, and parameter schema are
-    the model's only way to understand a tool.
+    <code>name</code>, <code>description</code>, and parameter schema are
+    the model's only interface to the outside world.
   </p>
 </section>
 
-<!-- ────────────── SLIDE 9: Calculator tool ────────────── -->
+<!-- ────────────── SLIDE 10: Calculator tool ────────────── -->
 <section>
   <h2>The calculator tool</h2>
   <p style="font-size:0.8em; color:var(--dim); margin-bottom:0.5em;">
-    <code>src/tools/calculator.ts</code> — the first tool students use.
+    <code>src/tools/calculator.ts</code>
   </p>
   <pre><code class="language-typescript">export const calculator: Tool&lt;{ result: number }&gt; = {
   name: 'calculator',
@@ -311,33 +439,32 @@ Turn 2 ────────────────────────�
 };</code></pre>
 </section>
 
-<!-- ────────────── SLIDE 10: The LLM client ────────────── -->
+<!-- ────────────── SLIDE 11: LLM client ────────────── -->
 <section>
   <h2>One door to the LLM</h2>
   <p style="font-size:0.8em; color:var(--dim); margin-bottom:0.5em;">
-    <code>src/core/llm.ts</code> — the single point of LLM access. Swap models here.
+    <code>src/core/llm.ts</code> — single point of Azure OpenAI access.
+    Model name comes from <code>.env</code> — never hardcoded elsewhere.
   </p>
   <pre><code class="language-typescript">export const DEFAULT_MODEL = process.env['AZURE_OPENAI_MODEL'] ?? 'gpt-4o';
 
-let instance: AzureOpenAI | undefined;
-
 export function getLlm(): AzureOpenAI {
-  if (instance) return instance;
-  // Validates credentials and throws clearly if any are missing
-  const apiKey    = process.env['AZURE_OPENAI_API_KEY'];
-  const endpoint  = process.env['AZURE_OPENAI_ENDPOINT'];
+  // Lazily creates the client — importing this module at type-check time
+  // does not require credentials to be set.
+  const apiKey     = process.env['AZURE_OPENAI_API_KEY'];
+  const endpoint   = process.env['AZURE_OPENAI_ENDPOINT'];
   const apiVersion = process.env['AZURE_OPENAI_API_VERSION'];
-  if (!apiKey)     throw new Error('AZURE_OPENAI_API_KEY is not set…');
-  // …
+  // Throws with a clear message if any credential is missing
   instance = new AzureOpenAI({ apiKey, endpoint, apiVersion });
   return instance;
 }</code></pre>
   <p style="font-size:0.75em; color:var(--dim); margin-top:0.5em;">
-    Lazy singleton — importing this file at type-check time does not require credentials.
+    Azure OpenAI uses <em>deployment names</em> (e.g. <code>gpt-4o</code>) rather than model IDs.
+    Set <code>AZURE_OPENAI_MODEL</code> in <code>.env</code> to match your deployment.
   </p>
 </section>
 
-<!-- ────────────── SLIDE 11: Agent config ────────────── -->
+<!-- ────────────── SLIDE 12: AgentConfig ────────────── -->
 <section>
   <h2>AgentConfig — what you pass in</h2>
   <p style="font-size:0.8em; color:var(--dim); margin-bottom:0.5em;"><code>src/core/agent.ts</code></p>
@@ -347,89 +474,87 @@ export function getLlm(): AzureOpenAI {
   readonly tools?: readonly Tool[];
   readonly model?: string;       // defaults to DEFAULT_MODEL from .env
   readonly maxSteps?: number;    // hard cap — defaults to 10
-}</code></pre>
-  <div style="margin-top:0.7em; font-size:0.8em; color:var(--dim);">
-    The constructor is already implemented. Your job is the <code>run()</code> method.
-  </div>
-</section>
+}
 
-<!-- ────────────── SLIDE 12: The run() skeleton ────────────── -->
-<section>
-  <h2>The <code>run()</code> skeleton</h2>
-  <p style="font-size:0.78em; color:var(--dim); margin-bottom:0.4em;">
-    The shape to implement — every step maps to what you just learned.
+// Typical instantiation:
+const agent = new Agent({
+  name: 'math-tutor',
+  instructions: 'You are a careful math tutor. Use the calculator tool.',
+  tools: [calculator],
+});</code></pre>
+  <p style="font-size:0.78em; color:var(--dim); margin-top:0.5em;">
+    Constructor is already implemented. Your job is <code>run()</code>.
   </p>
-  <pre><code class="language-typescript">async run(input: string): Promise&lt;string&gt; {
-  const messages = [
-    { role: 'system',  content: this.instructions },
-    { role: 'user',    content: input },
-  ];
-  const tools = toOpenAITools([...this.tools.values()]);
-
-  for (let step = 0; step &lt; this.maxSteps; step++) {
-    this.logger.llmCall(this.model, [...this.tools.keys()]);
-    const response = await getLlm().chat.completions.create(
-      { model: this.model, messages, ...(tools.length ? { tools } : {}) }
-    );
-    const message   = response.choices[0]?.message;
-    const toolCalls = message.tool_calls ?? [];
-
-    if (toolCalls.length === 0) { /* → return text */ }
-
-    messages.push({ role: 'assistant', ...message }); // ← must come first
-    const results = await Promise.all(toolCalls.map(call =&gt; /* execute */));
-    messages.push(...results);
-  }
-  throw new Error(`Agent ${this.name} exceeded maxSteps.`);
-}</code></pre>
 </section>
 
 <!-- ────────────── SLIDE 13: File tour ────────────── -->
 <section>
-  <h2>Files to skim before coding</h2>
-  <table>
-    <thead><tr><th>File</th><th>What it does</th><th>Read?</th></tr></thead>
-    <tbody>
-      <tr><td><code>src/core/messages.ts</code></td><td>Re-exports <code>ChatCompletionMessageParam</code> as <code>Content</code></td><td class="ok">skim</td></tr>
-      <tr><td><code>src/core/tool.ts</code></td><td><code>Tool</code> interface + <code>toOpenAITools()</code></td><td class="ok">read</td></tr>
-      <tr><td><code>src/core/llm.ts</code></td><td><code>getLlm()</code> singleton, <code>DEFAULT_MODEL</code></td><td class="ok">read</td></tr>
-      <tr><td><code>src/core/logger.ts</code></td><td>Pretty terminal logger for every step</td><td class="dim">skim</td></tr>
-      <tr><td><code>src/core/agent.ts</code></td><td><strong>Your exercise.</strong> Constructor done; <code>run()</code> is TODO.</td><td class="accent2">edit</td></tr>
-      <tr><td><code>src/tools/calculator.ts</code></td><td>First tool; used by the starter demo</td><td class="dim">skim</td></tr>
-    </tbody>
-  </table>
-</section>
-
-<!-- ────────────── SLIDE 14: Exercise steps ────────────── -->
-<section>
-  <h2>The exercise</h2>
-  <ul class="step-list">
-    <li><div class="step-num">1</div>
-      Run <code>npm run ws:01</code> — watch it fail with "not yet implemented".
+  <h2>Files to read before coding</h2>
+  <ul style="list-style:none; padding:0; margin:0.4em 0 0; font-size:0.8em;">
+    <li style="display:flex; align-items:baseline; gap:0.6em; padding:0.32em 0; border-bottom:1px solid #1a2a3a;">
+      <code style="flex:0 0 13.5em;">src/core/tool.ts</code>
+      <span class="dim" style="flex:1;"><code>Tool</code> interface + <code>toOpenAITools()</code></span>
+      <span class="ok" style="flex:0 0 2.5em; text-align:right;">read</span>
     </li>
-    <li><div class="step-num">2</div>
-      Open <code>src/core/agent.ts</code>. Implement <code>run()</code>.
+    <li style="display:flex; align-items:baseline; gap:0.6em; padding:0.32em 0; border-bottom:1px solid #1a2a3a;">
+      <code style="flex:0 0 13.5em;">src/core/llm.ts</code>
+      <span class="dim" style="flex:1;"><code>getLlm()</code> singleton, <code>DEFAULT_MODEL</code></span>
+      <span class="ok" style="flex:0 0 2.5em; text-align:right;">read</span>
     </li>
-    <li><div class="step-num">3</div>
-      Build the messages array (system + user), call <code>chat.completions.create</code>.
+    <li style="display:flex; align-items:baseline; gap:0.6em; padding:0.32em 0; border-bottom:1px solid #1a2a3a;">
+      <code style="flex:0 0 13.5em;">src/core/messages.ts</code>
+      <span class="dim" style="flex:1;">Re-exports <code>ChatCompletionMessageParam</code> as <code>Content</code></span>
+      <span class="dim" style="flex:0 0 2.5em; text-align:right;">skim</span>
     </li>
-    <li><div class="step-num">4</div>
-      Branch: no tool calls → return text. Tool calls → execute and loop.
+    <li style="display:flex; align-items:baseline; gap:0.6em; padding:0.32em 0; border-bottom:1px solid #1a2a3a;">
+      <code style="flex:0 0 13.5em;">src/core/logger.ts</code>
+      <span class="dim" style="flex:1;">Terminal logger — <code>llmCall</code>, <code>toolCall</code>, <code>toolResult</code></span>
+      <span class="dim" style="flex:0 0 2.5em; text-align:right;">skim</span>
     </li>
-    <li><div class="step-num">5</div>
-      Run again — watch the agent call the calculator and reason through the answer.
+    <li style="display:flex; align-items:baseline; gap:0.6em; padding:0.32em 0; border-bottom:1px solid #1a2a3a; background:#0c1e2e; margin:0 -0.4em; padding-left:0.4em; padding-right:0.4em;">
+      <code style="flex:0 0 13.5em;">src/core/agent.ts</code>
+      <span style="flex:1;"><strong>Your exercise.</strong> Constructor done; implement <code>run()</code>.</span>
+      <span class="accent2" style="flex:0 0 2.5em; text-align:right;">edit</span>
     </li>
-    <li><div class="step-num">6</div>
-      Try <code>npm run ws:01:solution</code> — three scenarios including one with no tools.
+    <li style="display:flex; align-items:baseline; gap:0.6em; padding:0.32em 0;">
+      <code style="flex:0 0 13.5em;">src/tools/calculator.ts</code>
+      <span class="dim" style="flex:1;">First tool — used by the starter demo</span>
+      <span class="dim" style="flex:0 0 2.5em; text-align:right;">skim</span>
     </li>
   </ul>
+</section>
+
+<!-- ────────────── SLIDE 14: The exercise ────────────── -->
+<section>
+  <h2>The exercise — 4 tasks</h2>
+  <ol style="padding-left:1.4em; margin:0.4em 0 0; font-size:0.86em; line-height:1.45;">
+    <li style="margin-bottom:0.55em;">
+      <strong>Add the system message</strong><br>
+      <span class="dim">Prepend <code>{ role: 'system', content: this.instructions }</code> to the history array.</span>
+    </li>
+    <li style="margin-bottom:0.55em;">
+      <strong>Write the loop</strong><br>
+      <span class="dim">Wrap the LLM call in <code>for (let step = 0; step &lt; this.maxSteps; step++)</code>. Throw after if no answer was produced.</span>
+    </li>
+    <li style="margin-bottom:0.55em;">
+      <strong>Handle tool calls</strong><br>
+      <span class="dim">Append the assistant turn first, then run each tool with <code>Promise.all</code> and return one <code>role:'tool'</code> message per result.</span>
+    </li>
+    <li>
+      <strong>Return the text answer</strong><br>
+      <span class="dim">When <code>tool_calls</code> is empty, log with <code>this.logger.llmText</code> and return.</span>
+    </li>
+  </ol>
+  <p style="margin-top:0.55em; font-size:0.75em; color:var(--dim);">
+    <code>npm run ws:01</code> to test &nbsp;·&nbsp; <code>npm run ws:01:solution</code> for three scenarios
+  </p>
 </section>
 
 <!-- ────────────── SLIDE 15: Expected terminal output ────────────── -->
 <section>
   <h2>What success looks like</h2>
   <p style="font-size:0.8em; color:var(--dim); margin-bottom:0.5em;">
-    Every step is visible in the terminal. You should see something like:
+    Every step is visible. Three LLM calls, two tool calls, one answer.
   </p>
   <pre style="border-left-color: var(--accent2);"><code class="language-bash">[math-tutor] → llm    model=gpt-4o  tools=[calculator]
 [math-tutor] → tool   calculator({"expression":"47 * 12"})
@@ -442,7 +567,6 @@ export function getLlm(): AzureOpenAI {
 
 Final answer:
  The result is 692.</code></pre>
-  <p style="font-size:0.75em; color:var(--dim);">Three LLM calls, two tool calls, one answer.</p>
 </section>
 
 <!-- ────────────── SLIDE 16: Stretch goals ────────────── -->
@@ -451,15 +575,15 @@ Final answer:
   <div class="cols" style="font-size:0.85em;">
     <div class="col">
       <h3>Tool error recovery</h3>
-      <p class="dim">Wrap <code>tool.execute</code> in try/catch. Send <code>{ error: message }</code> back. Does the model self-correct?</p>
+      <p class="dim">Wrap <code>tool.execute</code> in try/catch. Return <code>{ error: message }</code> as the tool result — does the model self-correct?</p>
       <h3>Step counter in logs</h3>
-      <p class="dim">Add <code>step=3/10</code> to each log line. How many iterations does a 3-step math problem take?</p>
+      <p class="dim">Add <code>step=3/10</code> to each log line. See exactly how many iterations a 3-step math problem takes.</p>
     </div>
     <div class="col">
       <h3>A second tool</h3>
-      <p class="dim">Write a <code>getCurrentTime()</code> tool. Ask: "How many minutes until midnight?" The agent has to call two different tools.</p>
-      <h3>No-tool agent</h3>
-      <p class="dim">Create an agent with <code>tools: []</code>. The loop should exit on the first turn — verify that.</p>
+      <p class="dim">Write a <code>getCurrentTime()</code> tool. Ask: "How many minutes until midnight?" Two tools, one agent.</p>
+      <h3>Text-only agent</h3>
+      <p class="dim">Create an agent with <code>tools: []</code>. The loop should exit on the first turn — confirm it does.</p>
     </div>
   </div>
 </section>
@@ -472,55 +596,108 @@ Final answer:
       <h3 class="ok">✓ Good fit</h3>
       <ul style="list-style:none; padding:0;">
         <li class="dim" style="margin:0.4em 0;">Open-ended problems where the number of steps is unknown upfront</li>
-        <li class="dim" style="margin:0.4em 0;">Research tasks that require exploring and backtracking</li>
-        <li class="dim" style="margin:0.4em 0;">Any task where the model needs to decide <em>which</em> tools to call and in what order</li>
+        <li class="dim" style="margin:0.4em 0;">Tasks that require the model to decide which tools to call and in what order</li>
+        <li class="dim" style="margin:0.4em 0;">Research or exploration that may require backtracking</li>
       </ul>
     </div>
     <div class="col">
       <h3 class="warn">✗ Poor fit</h3>
       <ul style="list-style:none; padding:0;">
-        <li class="dim" style="margin:0.4em 0;">Latency-sensitive tasks (loops add turns)</li>
-        <li class="dim" style="margin:0.4em 0;">Untrusted environments (unbounded tool use)</li>
+        <li class="dim" style="margin:0.4em 0;">Latency-sensitive tasks — each loop adds a full LLM round-trip</li>
         <li class="dim" style="margin:0.4em 0;">Fixed, known paths — use a workflow (W2–W4) instead</li>
+        <li class="dim" style="margin:0.4em 0;">Untrusted environments where unbounded tool use is dangerous</li>
       </ul>
     </div>
   </div>
   <p style="margin-top:0.9em; font-size:0.75em; color:var(--dim);">
-    Anthropic: <em>"Workflows over agents when the path is known. Determinism is cheaper, faster, debuggable."</em>
+    <em>"Workflows over agents when the path is known. Determinism is cheaper, faster, debuggable."</em>
+    — Anthropic
   </p>
 </section>
 
-<!-- ────────────── SLIDE 18: What you've built / next ────────────── -->
-<section>
-  <h2>What you built today</h2>
-  <p style="font-size:0.88em;">
-    <code>src/core/agent.ts</code> — a working autonomous agent.
-    It's also the <span class="accent">foundation for the next four workshops</span>:
-  </p>
-  <table style="margin-top:0.7em; font-size:0.78em;">
-    <thead><tr><th>Workshop</th><th>Pattern</th><th>What it does with <code>Agent</code></th></tr></thead>
-    <tbody>
-      <tr><td>W2 Pipeline</td><td>Prompt chaining</td><td>Chains agents — output of one → input of next</td></tr>
-      <tr><td>W3 Router</td><td>Routing + orchestrator</td><td>One agent dispatches to specialist agents</td></tr>
-      <tr><td>W4 Fan-Out</td><td>Parallelization</td><td>Runs agents concurrently with <code>Promise.all</code></td></tr>
-      <tr><td>W5 Reflection</td><td>Evaluator-optimizer</td><td>Writer agent + critic agent in a loop</td></tr>
-    </tbody>
-  </table>
-  <p style="margin-top:0.8em; font-size:0.8em; color:var(--dim);">You wrote that. Move on to W2.</p>
-</section>
-
-<!-- ────────────── SLIDE 19: Key principles ────────────── -->
+<!-- ────────────── SLIDE 18: Key principles ────────────── -->
 <section>
   <h2>Cross-cutting principles</h2>
   <ul style="font-size:0.82em; list-style:none; padding:0;">
     <li style="margin:0.45em 0; display:flex; gap:0.6em; align-items:baseline;"><span class="accent2">1.</span> <span><strong>Start simple.</strong> A single well-prompted LLM call beats a misconfigured agent.</span></li>
     <li style="margin:0.45em 0; display:flex; gap:0.6em; align-items:baseline;"><span class="accent2">2.</span> <span><strong>Workflows over agents</strong> when the path is known. Determinism is cheaper.</span></li>
-    <li style="margin:0.45em 0; display:flex; gap:0.6em; align-items:baseline;"><span class="accent2">3.</span> <span><strong>Tool design is most of the work.</strong> Names, descriptions, and schemas drive correctness.</span></li>
-    <li style="margin:0.45em 0; display:flex; gap:0.6em; align-items:baseline;"><span class="accent2">4.</span> <span><strong>Cap your loops.</strong> Always have a <code>maxSteps</code>. Unbounded loops + flaky tools = unbounded cost.</span></li>
-    <li style="margin:0.45em 0; display:flex; gap:0.6em; align-items:baseline;"><span class="accent2">5.</span> <span><strong>Make traces visible.</strong> You should be able to read the terminal and follow the agent's reasoning.</span></li>
+    <li style="margin:0.45em 0; display:flex; gap:0.6em; align-items:baseline;"><span class="accent2">3.</span> <span><strong>Tool design is most of the work.</strong> Names, descriptions, and schemas decide correctness.</span></li>
+    <li style="margin:0.45em 0; display:flex; gap:0.6em; align-items:baseline;"><span class="accent2">4.</span> <span><strong>Cap your loops.</strong> Unbounded loops + flaky tools = unbounded cost.</span></li>
+    <li style="margin:0.45em 0; display:flex; gap:0.6em; align-items:baseline;"><span class="accent2">5.</span> <span><strong>Make traces visible.</strong> Read the terminal and follow the agent's reasoning.</span></li>
   </ul>
   <p style="font-size:0.72em; color:var(--dim); margin-top:0.6em;">
     Source: Anthropic — "Building Effective Agents"
+  </p>
+</section>
+
+<!-- ────────────── SLIDE 19: Documentation links ────────────── -->
+<section>
+  <h2>Documentation &amp; references</h2>
+  <a class="doc-link" href="https://platform.openai.com/docs/guides/function-calling" target="_blank">
+    <span class="doc-icon">📖</span>
+    <span>
+      <span class="doc-title">OpenAI — Function Calling Guide</span>
+      <span class="doc-desc">Canonical reference for how tool declarations, tool_calls, and tool results work in the API</span>
+    </span>
+  </a>
+  <a class="doc-link" href="https://learn.microsoft.com/en-us/azure/ai-services/openai/" target="_blank">
+    <span class="doc-icon">☁️</span>
+    <span>
+      <span class="doc-title">Azure OpenAI Service docs</span>
+      <span class="doc-desc">Endpoint setup, deployment names, API versions, and authentication</span>
+    </span>
+  </a>
+  <a class="doc-link" href="https://github.com/openai/openai-node#readme" target="_blank">
+    <span class="doc-icon">📦</span>
+    <span>
+      <span class="doc-title">openai Node SDK — README</span>
+      <span class="doc-desc">AzureOpenAI client, chat completions, TypeScript types</span>
+    </span>
+  </a>
+  <a class="doc-link" href="https://www.anthropic.com/engineering/building-effective-agents" target="_blank">
+    <span class="doc-icon">🧠</span>
+    <span>
+      <span class="doc-title">Anthropic — Building Effective Agents</span>
+      <span class="doc-desc">The pattern taxonomy behind this workshop series: augmented LLM, workflows, agents</span>
+    </span>
+  </a>
+</section>
+
+<!-- ────────────── SLIDE 20: What's next (one slide for future workshops) ────────────── -->
+<section>
+  <h2>What you built — and what's next</h2>
+  <p style="font-size:0.82em; margin-bottom:0.5em;">
+    <code>src/core/agent.ts</code> is the foundation every future workshop imports unchanged.
+  </p>
+  <div class="roadmap-grid">
+    <div class="roadmap-card active">
+      <span class="ws-num">01</span>
+      <span class="ws-name">Agent Loop</span>
+      <span class="ws-pattern">You built this</span>
+    </div>
+    <div class="roadmap-card">
+      <span class="ws-num">02</span>
+      <span class="ws-name">Pipeline</span>
+      <span class="ws-pattern">Prompt chaining — agents in sequence</span>
+    </div>
+    <div class="roadmap-card">
+      <span class="ws-num">03</span>
+      <span class="ws-name">Router</span>
+      <span class="ws-pattern">One agent routes to specialists</span>
+    </div>
+    <div class="roadmap-card">
+      <span class="ws-num">04</span>
+      <span class="ws-name">Fan-Out</span>
+      <span class="ws-pattern">Agents in parallel with Promise.all</span>
+    </div>
+    <div class="roadmap-card">
+      <span class="ws-num">05</span>
+      <span class="ws-name">Reflection</span>
+      <span class="ws-pattern">Writer + critic in a loop</span>
+    </div>
+  </div>
+  <p style="margin-top:0.8em; font-size:0.75em; color:var(--dim);">
+    Same <code>Agent</code> class, different composition patterns. Move on to W2.
   </p>
 </section>
 
@@ -538,7 +715,13 @@ Final answer:
     slideNumber: 'c/t',
     transition: 'fade',
     transitionSpeed: 'fast',
-    center: true,
+    center: false,
+    width: 1280,
+    height: 720,
+    margin: 0.02,
+    minScale: 0.2,
+    maxScale: 2.0,
+    fontSize: '14px',
     plugins: [],
   });
 

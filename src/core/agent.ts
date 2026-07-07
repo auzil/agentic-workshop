@@ -54,74 +54,63 @@ export class Agent {
    *   4. If we've looped `maxSteps` times without finishing, throw.
    */
   async run(input: string): Promise<string> {
+    // TASK 1 — Add a system message so the model receives its persona on every turn.
+    // It must come before the user message in the array.
+    // Shape: { role: 'system', content: this.instructions }
     const messages: ChatCompletionMessageParam[] = [
-      { role: 'system', content: this.instructions },
       { role: 'user', content: input },
     ];
+
     const tools = toOpenAITools([...this.tools.values()]);
 
-    for (let step = 0; step < this.maxSteps; step++) {
-      this.logger.llmCall(this.model, [...this.tools.keys()]);
+    // TASK 2 — Wrap everything below in a for loop that runs up to this.maxSteps
+    // iterations. A model that keeps calling tools will loop forever without a cap —
+    // maxSteps is that safety net. After the loop, throw if no answer was produced.
 
-      const response = await getLlm().chat.completions.create({
-        model: this.model,
-        messages,
-        ...(tools.length > 0 ? { tools } : {}),
-      });
+    this.logger.llmCall(this.model, [...this.tools.keys()]);
 
-      const message = response.choices[0]?.message;
-      if (!message) {
-        throw new Error('Azure OpenAI returned a response with no choices.');
-      }
+    const response = await getLlm().chat.completions.create({
+      model: this.model,
+      messages,
+      ...(tools.length > 0 ? { tools } : {}),
+    });
 
-      const toolCalls = message.tool_calls ?? [];
-      if (toolCalls.length === 0) {
-        const text = message.content ?? '';
-        this.logger.llmText(text);
-        return text;
-      }
+    const message = response.choices[0]?.message;
+    if (!message) throw new Error('Azure OpenAI returned a response with no choices.');
 
-      // Append the assistant's turn (contains the tool_calls the model wants run)
-      messages.push({
-        role: 'assistant',
-        content: message.content,
-        tool_calls: message.tool_calls,
-      });
+    const toolCalls = message.tool_calls ?? [];
 
-      // Execute each tool call and collect results
-      const toolResults = await Promise.all(
-        toolCalls.map(async (call) => {
-          const name = call.function.name;
-          const args = JSON.parse(call.function.arguments) as Record<string, unknown>;
-          const tool = this.tools.get(name);
-          if (!tool) {
-            throw new Error(`Model called unknown tool: ${name}`);
-          }
-          this.logger.toolCall(name, args);
-          try {
-            const result = await tool.execute(args);
-            this.logger.toolResult(name, result);
-            return {
-              role: 'tool' as const,
-              tool_call_id: call.id,
-              content: JSON.stringify(result),
-            };
-          } catch (err: unknown) {
-            const msg = err instanceof Error ? err.message : String(err);
-            this.logger.error(`tool ${name} threw: ${msg}`);
-            return {
-              role: 'tool' as const,
-              tool_call_id: call.id,
-              content: JSON.stringify({ error: msg }),
-            };
-          }
-        }),
-      );
-
-      // Each tool result is its own 'tool' message (one per call)
-      messages.push(...toolResults);
+    // TASK 4 — No tool calls: the model is done. Log the text and return it.
+    // Use this.logger.llmText to surface the answer in the terminal trace.
+    if (toolCalls.length === 0) {
+      throw new Error('Not yet implemented — see workshops/01-agent-loop/README.md.');
     }
 
+    // TASK 3 — Handle tool calls.
+    //
+    // Step A — append the assistant turn to history BEFORE the results.
+    //   The API enforces this order; pushing results first returns a 400.
+    //   { role: 'assistant', content: message.content, tool_calls: message.tool_calls }
+    //
+    // Step B — execute each tool in parallel and return one result message per call.
+    //   Log each call with this.logger.toolCall and each result with toolResult.
+    //   Link every result back to its request by tool_call_id:
+    //   { role: 'tool', tool_call_id: call.id, content: JSON.stringify(result) }
+    const toolResults = await Promise.all(
+      toolCalls.map(async (call) => {
+        const name = call.function.name;
+        const args = JSON.parse(call.function.arguments) as Record<string, unknown>;
+        const tool = this.tools.get(name);
+        if (!tool) throw new Error(`Model called unknown tool: ${name}`);
+        this.logger.toolCall(name, args);
+
+        throw new Error('Not yet implemented — see workshops/01-agent-loop/README.md.');
+      }),
+    );
+
+    messages.push(...toolResults);
+
+    // This throw belongs after your loop — reached only when maxSteps is exhausted.
     throw new Error(
       `Agent ${this.name} exceeded maxSteps (${this.maxSteps}) without producing a final answer.`,
     );
